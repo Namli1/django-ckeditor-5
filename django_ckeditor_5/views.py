@@ -7,11 +7,23 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from .forms import UploadFileForm
 from PIL import Image
+from django.conf import settings
 
+suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+def humansize(nbytes):
+    i = 0
+    while nbytes >= 1024 and i < len(suffixes)-1:
+        nbytes /= 1024.
+        i += 1
+    f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
+    return '%s %s' % (f, suffixes[i])
 
 class NoImageException(Exception):
     pass
 
+class ImageTooLargeException(Exception):
+    def __init__(self, fileSize):
+        self.fileSize = fileSize
 
 def image_verify(f):
     try:
@@ -19,6 +31,11 @@ def image_verify(f):
     except IOError:
         raise NoImageException
 
+# Check the image file size and raise exception if too big
+def check_image_size(f):
+    if f.size > settings.CKEDITOR5_MAX_FILE_SIZE:
+        image_size = humansize(f.size)
+        raise ImageTooLargeException(image_size)
 
 def handle_uploaded_file(f):
     folder = getattr(settings, 'CKEDITOR_5_UPLOADS_FOLDER', 'django_ckeditor_5')
@@ -39,7 +56,15 @@ def upload_file(request):
                     "message": "{}".format(str(ex))
                 }
             })
+        try:
+            check_image_size(request.FILES['upload'])
+        except ImageTooLargeException as ex:
+            return JsonResponse({
+                "error": {
+                    "message": "Image must be under 3MB, it is currently {}".format(ex.fileSize)
+                }
+            })
         if form.is_valid():
             url = handle_uploaded_file(request.FILES['upload'])
-            return JsonResponse({'url': url})
+            return JsonResponse({'url': url,})
     raise Http404(_('Page not found.'))

@@ -13,7 +13,7 @@ import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript';
 import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
-//import Image from '@ckeditor/ckeditor5-image/src/image';
+import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
@@ -54,7 +54,7 @@ ClassicEditor.builtinPlugins = [
     Strikethrough, Code, Subscript, Superscript,
     BlockQuote,
     Heading,
-    //Image,
+    Image,
     ImageWithTitle,
     ImageCaption,
     ImageStyle,
@@ -76,5 +76,5 @@ ClassicEditor.builtinPlugins = [
     Highlight,
     TodoList,
     ImageTitle,
-    Sign	
+    Sign,	
 ];

@@ -26,7 +26,7 @@ export default class ImageEditing extends Plugin {
 			isObject: true,
 			isBlock: true,
 			allowWhere: '$block',
-			allowAttributes: [ 'alt', 'src', 'srcset', 'title' ]
+			allowAttributes: [ 'alt', 'src', 'srcset', 'title', 'style',]
 		} );
 
 		conversion.for( 'dataDowncast' ).elementToElement( {

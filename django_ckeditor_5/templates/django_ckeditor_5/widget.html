@@ -1,4 +1,8 @@
-<textarea  name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
-{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+<textarea  name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+{% if widget.value %}
+    {{ widget.value }}
+{% endif %}
+</textarea>
 {{ errors }}
 {{ config|json_script:script_id}}
+</script>
