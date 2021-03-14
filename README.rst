@@ -36,6 +36,8 @@ Quick start
       STATIC_URL = '/static/'
       MEDIA_URL = '/media/'
       MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+      CKCKEDITOR_5_UPLOADS_FOLDER = "media/uploads/" # Add location of folder to store the image uploads
+      CKEDITOR5_MAX_FILE_SIZE = 3145728 # Add maximum file size for upload in bytes (example is 3MB)
 
       customColorPalette = [
             {
