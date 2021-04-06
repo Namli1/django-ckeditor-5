@@ -40,13 +40,16 @@ def check_image_size(f):
 def handle_uploaded_file(f):
     folder = getattr(settings, 'CKEDITOR_5_UPLOADS_FOLDER', 'django_ckeditor_5')
     uploads_path = Path(settings.MEDIA_ROOT, folder)
+    #TODO: Need to do resizing + compressing here!!!
     fs = FileSystemStorage(location=uploads_path)
     filename = fs.save(f.name, f)
     return '/'.join([urllib.parse.urljoin(fs.base_url, folder), filename])
 
 
 def upload_file(request):
-    if request.method == 'POST' and request.user.is_staff:
+    has_perm = settings.CKEDITOR_5_UPLOAD_PERMISSION if hasattr(settings, 'CKEDITOR_5_UPLOAD_PERMISSION') else request.user.is_staff
+    print(has_perm)
+    if request.method == 'POST' and has_perm: #request.user.is_staff:
         form = UploadFileForm(request.POST, request.FILES)
         try:
             image_verify(request.FILES['upload'])
@@ -66,5 +69,12 @@ def upload_file(request):
             })
         if form.is_valid():
             url = handle_uploaded_file(request.FILES['upload'])
+            print(url)
             return JsonResponse({'url': url,})
+    else:
+        return JsonResponse({
+                "error": {
+                    "message": "You do not have the permission to upload files."
+                }
+            })
     raise Http404(_('Page not found.'))
