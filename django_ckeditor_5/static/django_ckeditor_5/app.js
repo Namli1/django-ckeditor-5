@@ -30,12 +30,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 'X-CSRFToken': getCookie('csrftoken'),
             }
         }
+
+        config['imageRemoveEvent'] = {
+            callback: (imagesSrc, nodeObjects) => {
+                // note: imagesSrc is array of src & nodeObjects is array of nodeObject
+                // node object api: https://ckeditor.com/docs/ckeditor5/latest/api/module_engine_model_node-Node.html
+    
+                console.log('callback called', imagesSrc, nodeObjects);
+            }
+        }
+
         //print(config)
         ClassicEditor.create(allEditors[i],
             config).then( editor => {
                 editors.push(editor);        
             } ).catch(error => {
-
+                console.error( error );
             });
     }
     window.editors = editors;

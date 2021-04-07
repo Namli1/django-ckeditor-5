@@ -40,6 +40,8 @@ import ImageTitle from './custom_plugins/imagetitle';
 import ImageWithTitle from './custom_plugins/imagewithtitle';
 import Sign from "./custom_plugins/sign/sign";
 
+import ImageRemoveEventCallbackPlugin from "ckeditor5-image-remove-event-callback-plugin";
+
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -55,7 +57,7 @@ ClassicEditor.builtinPlugins = [
     BlockQuote,
     Heading,
     Image,
-    ImageWithTitle,
+    //ImageWithTitle,
     ImageCaption,
     ImageStyle,
     ImageToolbar,
@@ -77,6 +79,8 @@ ClassicEditor.builtinPlugins = [
     TodoList,
     ImageTitle,
     Sign,
+
+    ImageRemoveEventCallbackPlugin,
 
     MyCustomUploadAdapterPlugin,
 ];
