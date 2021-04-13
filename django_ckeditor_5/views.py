@@ -1,6 +1,9 @@
+import os
 from pathlib import Path
-import urllib.parse
+from urllib.parse import urljoin
+from datetime import datetime
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
 from django.http import JsonResponse
 from django.conf import settings
@@ -39,16 +42,15 @@ def check_image_size(f):
 
 def handle_uploaded_file(f):
     folder = getattr(settings, 'CKEDITOR_5_UPLOADS_FOLDER', 'django_ckeditor_5')
-    uploads_path = Path(settings.MEDIA_ROOT, folder)
-    #TODO: Need to do resizing + compressing here!!!
+    yearAndMonth = "%s-%s" %(datetime.today().year, datetime.today().month)
+    uploads_path = Path(settings.MEDIA_ROOT, folder, yearAndMonth)
     fs = FileSystemStorage(location=uploads_path)
     filename = fs.save(f.name, f)
-    return '/'.join([urllib.parse.urljoin(fs.base_url, folder), filename])
+    return ''.join([urljoin(fs.base_url, folder), '/'.join([yearAndMonth, filename])])
 
 
 def upload_file(request):
-    has_perm = settings.CKEDITOR_5_UPLOAD_PERMISSION if hasattr(settings, 'CKEDITOR_5_UPLOAD_PERMISSION') else request.user.is_staff
-    print(has_perm)
+    has_perm = request.user.has_perm(settings.CKEDITOR_5_UPLOAD_PERMISSION) if hasattr(settings, 'CKEDITOR_5_UPLOAD_PERMISSION') else request.user.is_staff
     if request.method == 'POST' and has_perm: #request.user.is_staff:
         form = UploadFileForm(request.POST, request.FILES)
         try:
@@ -69,7 +71,6 @@ def upload_file(request):
             })
         if form.is_valid():
             url = handle_uploaded_file(request.FILES['upload'])
-            print(url)
             return JsonResponse({'url': url,})
     else:
         return JsonResponse({
@@ -78,3 +79,20 @@ def upload_file(request):
                 }
             })
     raise Http404(_('Page not found.'))
+
+def delete_file(request, path):
+    has_perm = request.user.has_perm(settings.CKEDITOR_5_UPLOAD_PERMISSION) if hasattr(settings, 'CKEDITOR_5_UPLOAD_PERMISSION') else request.user.is_staff
+    if request.method == 'POST' and has_perm:
+        if os.path.isfile(path):
+            os.remove(path)
+
+            return JsonResponse({
+                "image_delete": {
+                    "success": True,
+                }
+            })
+        else:
+            raise Http404(_('No file matching the path found on server.'))
+    else:
+       raise PermissionDenied("You have no permission to access this site.")
+    

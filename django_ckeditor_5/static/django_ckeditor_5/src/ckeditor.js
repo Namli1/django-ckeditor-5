@@ -42,13 +42,14 @@ import Sign from "./custom_plugins/sign/sign";
 
 import ImageRemoveEventCallbackPlugin from "ckeditor5-image-remove-event-callback-plugin";
 
+import CompressionUploadAdapter from "./custom_plugins/compressionUploadAdapter.js";
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
 // Plugins to include in the build.
 ClassicEditor.builtinPlugins = [
     Essentials,
-    UploadAdapter,
+    //UploadAdapter,
     Autoformat,
     Bold,
     Italic,
@@ -69,7 +70,7 @@ ClassicEditor.builtinPlugins = [
     Alignment,
     Font,
     PasteFromOffice,
-    SimpleUploadAdapter,
+    //SimpleUploadAdapter,
     MediaEmbed,
     RemoveFormat,
     Table, TableToolbar,
@@ -80,9 +81,10 @@ ClassicEditor.builtinPlugins = [
     ImageTitle,
     Sign,
 
+    CompressionUploadAdapter,
+
     ImageRemoveEventCallbackPlugin,
 
-    MyCustomUploadAdapterPlugin,
 ];
 
 
